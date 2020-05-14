@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -56,7 +56,7 @@
         }
         .go-one, .go-two {
             cursor: pointer;
-            font-size: 34px;
+            font-size: 20px;
         }
             .go-one:hover {
                 color: rgb(103, 140, 226)
@@ -71,18 +71,18 @@
     </style>
 </head>
 <body>
-    <div class="container" style="width:1920px;margin: 0 auto;">
+    <div class="container" style="margin: 0 auto;width:1100px;">
         <div class="row">
             <div class="col-lg-12">
-                <img src="images/info.png" style="width:1920px;" />
+                <img src="images/info.png" style="width:100%;" />
             </div>
         </div>
         <div class="row" style="padding-left:70px;">
             <div class="col-lg-6" style="text-align:center;">
-                <h4><span class="go-one">Distribution map of who never use computers in Europe</span></h4>
+                <h4 style="width:90%;"><span class="go-one">Distribution map of who never use computers in Europe</span></h4>
             </div>
             <div class="col-lg-6" style="text-align:center;">
-                <h4><span class="go-two">Distribution map of who never use Internet in Europe</span> </h4>
+                <h4 style="width:86%;"><span class="go-two">Distribution map of who never use Internet in Europe</span> </h4>
             </div>
         </div>
         <div class="row" style="padding-left:70px;">
@@ -100,7 +100,7 @@
         </div>
 		<div class="row">
             <div class="col-lg-12">
-                <img src="images/picture2-2.png" style="width:1920px;" />
+                <img src="images/picture2-2.png" style="width:100%;" />
             </div>
         </div>
 		
@@ -203,8 +203,8 @@
 
         // 定义地图投影对象
         var projection = d3.geoMercator()
-            .scale((mapWidth + 1) *1.5)
-            .translate([mapWidth / 1.2, mapHeight*2 ])
+            .scale((mapWidth + 1) *2.2)
+            .translate([mapWidth / 1.5, mapHeight*1.85 ])
             .precision(.1);
 
         // 定义地图边的绘制对象
@@ -223,7 +223,7 @@
         });
 
         $(".go-one").click(function () {
-            var barwidth = $(".go-one").html().length * 16;
+            var barwidth = $("#chart").width() - 60;
             $("#barline").width(barwidth);
             $("#barline").css("margin-left", (width - barwidth) / 2);
             $(".go-two").css("font-weight", "");
@@ -235,7 +235,7 @@
         })
 
         $(".go-two").click(function () {
-            var barwidth = $(".go-two").html().length * 16;
+            var barwidth = $("#chart").width() - 60;
             $("#barline").width(barwidth);
             $("#barline").css("margin-left", width + (width - barwidth) / 2 + 30);
             $(".go-one").css("font-weight", "");
@@ -261,7 +261,7 @@
 
             data.forEach(function (d, i) {
                 data[i].value = d["value"] * 1;
-                dataobj[d.country] = {
+                dataobj[d.country.replace(/\s/g, "")] = {
                     country: d.country,
                     value: d["value"] * 1,
                     index: i
@@ -277,13 +277,13 @@
                     return 'subunit ca' + d.id + " ca-" + d.properties.name.replace(/[ \.#']+/g, '');
                 })
                 .style('fill', function (d, i) {
-                    if (dataobj[d.properties.name]) {
-                        return GetColorVal(dataobj[d.properties.name].value)
+                    if (dataobj[d.properties.name.replace(/\s/g, "")]) {
+                        return GetColorVal(dataobj[d.properties.name.replace(/\s/g, "")].value)
                     }
                     return "#ccc";
                 })
                 .style('opacity', function (d, i) {
-                    if (dataobj[d.properties.name]) {
+                    if (dataobj[d.properties.name.replace(/\s/g, "")]) {
                         return 1;
                     }
                     return 0.3;
@@ -373,13 +373,13 @@
                 .attr("width", 0)
                 .attr("height", ylinear.bandwidth() - 4)
                 .attr("y", (d, i) => ylinear(d.country) + 2)
-                .attr("class", d => "bar-rect bar-" + d.country)
+                .attr("class", d => "bar-rect bar-" + d.country.replace(/\s/g, ""))
                 .style("fill", d => GetColorVal(d.value))
                 .on("mouseover", function (d, i) {
-                    ShowBarMask(d.country);
+                    ShowBarMask(d.country.replace(/\s/g, ""));
                 })
                 .on("mouseout", function (d) {
-                    HideBarMask(d.country);
+                    HideBarMask(d.country.replace(/\s/g, ""));
                 })
                 .transition()
                 .duration(500)
@@ -388,7 +388,7 @@
             svgbar.selectAll(".text-val")
                 .data(data)
                 .join("text")
-                .attr("class", d => "text-val val-" + d.country)
+                .attr("class", d => "text-val val-" + d.country.replace(/\s/g, ""))
                 .attr("y", (d, i) => ylinear(d.country) + ylinear.bandwidth() / 2 + 4)
                 
                 .attr("fill", function (d) {
@@ -432,7 +432,7 @@
         }
         $(function () {
             $("#chart").height(height);
-            var barwidth = $(".go-one").html().length * 16;
+            var barwidth = $("#chart").width() - 60;
             $("#barline").width(barwidth);
             $("#barline").css("margin-left", (width - barwidth)/2)
             $("#barline").css("background", "rgb(103, 140, 226)");
